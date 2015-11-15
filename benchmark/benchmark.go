@@ -20,6 +20,10 @@ type Benchmark struct {
 var matchExp *regexp.Regexp = regexp.MustCompile(`(?P<name>^.*)\s+(?P<operations>\d+)\s+(?P<performance>\b([0-9]+\.[0-9])|(\d+)?)\s`)
 var expNames []string = matchExp.SubexpNames()
 
+// FromLine will take a string line that is in an expected benchmark format and
+// create a struct from it.
+// BenchmarkTest1                20000000                89.4 ns/op
+// BenchmarkTest2                20000000                28.5 ns/op
 func FromLine(line string) (*Benchmark, error) {
 	matches := matchExp.FindStringSubmatch(line)
 
