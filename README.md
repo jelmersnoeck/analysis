@@ -1,5 +1,7 @@
 # Analysis
 
+[![Build Status](https://travis-ci.org/jelmersnoeck/analysis.svg)](https://travis-ci.org/jelmersnoeck/analysis)
+
 Analysis provides a package where you can keep track of you code quality.
 
 ## Benchmark
