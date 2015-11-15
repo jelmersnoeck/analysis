@@ -17,8 +17,8 @@ type Benchmark struct {
 	Performance float64
 }
 
-var matchExp *regexp.Regexp = regexp.MustCompile(`(?P<name>^.*)\s+(?P<operations>\d+)\s+(?P<performance>\b([0-9]+\.[0-9])|(\d+)?)\s`)
-var expNames []string = matchExp.SubexpNames()
+var matchExp = regexp.MustCompile(`(?P<name>^.*)\s+(?P<operations>\d+)\s+(?P<performance>\b([0-9]+\.[0-9])|(\d+)?)\s`)
+var expNames = matchExp.SubexpNames()
 
 // FromLine will take a string line that is in an expected benchmark format and
 // create a struct from it.
