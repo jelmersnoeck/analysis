@@ -26,16 +26,8 @@ var expNames = matchExp.SubexpNames()
 // BenchmarkTest2                20000000                28.5 ns/op
 func FromLine(line string) (*Benchmark, error) {
 	matches := matchExp.FindStringSubmatch(line)
-
 	if len(matches) >= len(expNames) {
-		data := make(map[string]string)
-		for i, m := range expNames {
-			if m == "" {
-				continue
-			}
-
-			data[m] = strings.TrimSpace(matches[i])
-		}
+		data := getNamedMatches(matches)
 
 		performance, err := strconv.ParseFloat(data["performance"], 64)
 		if err != nil {
@@ -55,4 +47,17 @@ func FromLine(line string) (*Benchmark, error) {
 	}
 
 	return nil, nil
+}
+
+func getNamedMatches(matches []string) map[string]string {
+	data := make(map[string]string)
+	for i, m := range expNames {
+		if m == "" {
+			continue
+		}
+
+		data[m] = strings.TrimSpace(matches[i])
+	}
+
+	return data
 }
