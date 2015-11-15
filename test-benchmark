@@ -1,0 +1,5 @@
+BenchmarkTest1                20000000                89.4 ns/op
+BenchmarkTest2                20000000                28.5 ns/op
+BenchmarkTest3                20000000                79.8 ns/op
+BenchmarkTest4                20000000                36.4 ns/op
+BenchmarkTest5                20000000                364 ns/op

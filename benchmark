@@ -1,3 +1,0 @@
-BenchmarkHello-4           	20000000	        89.4 ns/op
-BenchmarkHello2-4          	20000000	        89.1 ns/op
-BenchmarkTemplateParallel-4	 5000000	       273 ns/op

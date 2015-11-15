@@ -4,13 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"regexp"
-	"strconv"
-	"strings"
+
+	"github.com/jelmersnoeck/analysis/benchmark"
 )
 
 func main() {
-	file, err := os.Open("benchmark")
+	file, err := os.Open("test-benchmark")
 
 	if err != nil {
 		fmt.Println(err)
@@ -19,40 +18,20 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-
-	myExp := regexp.MustCompile(`(?P<name>^.*)\s+(?P<operations>\d+)\s+(?P<performance>\b([0-9]+\.[0-9])|(\d+)?)\s`)
-	names := myExp.SubexpNames()
-	benchmarks := make([]Benchmark, 0)
+	benchmarks := make([]*benchmark.Benchmark, 0)
 
 	for scanner.Scan() {
-		matches := myExp.FindStringSubmatch(scanner.Text())
-		if len(matches) >= len(names) {
-			data := make(map[string]string)
-			for i, m := range names {
-				if m == "" {
-					continue
-				}
+		b, err := benchmark.FromLine(scanner.Text())
 
-				data[m] = strings.TrimSpace(matches[i])
-			}
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
 
-			p, _ := strconv.ParseFloat(data["performance"], 64)
-			i, _ := strconv.ParseInt(data["operations"], 10, 64)
-			b := Benchmark{
-				Name:        data["name"],
-				Operations:  i,
-				Performance: p,
-			}
-
+		if b != nil {
 			benchmarks = append(benchmarks, b)
 		}
 	}
 
 	fmt.Println(benchmarks)
-}
-
-type Benchmark struct {
-	Name        string
-	Operations  int64
-	Performance float64
 }
