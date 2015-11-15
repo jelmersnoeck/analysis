@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jelmersnoeck/analysis/benchmark"
+	"github.com/jelmersnoeck/analysis/models"
 )
 
 func main() {
@@ -18,10 +18,10 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	benchmarks := make([]*benchmark.Benchmark, 0)
+	benchmarks := make([]*models.Benchmark, 0)
 
 	for scanner.Scan() {
-		b, err := benchmark.FromLine(scanner.Text())
+		b, err := models.BenchmarkFromLine(scanner.Text())
 
 		if err != nil {
 			fmt.Println(err)
