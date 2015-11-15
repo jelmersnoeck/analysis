@@ -6,9 +6,20 @@ import (
 	"os"
 
 	"github.com/jelmersnoeck/analysis/models"
+	"github.com/jinzhu/gorm"
+	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/lib/pq"
 )
 
 func main() {
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	db.AutoMigrate(&models.Project{})
+	db.AutoMigrate(&models.Benchmark{})
+
 	file, err := os.Open("test-benchmark")
 
 	if err != nil {
