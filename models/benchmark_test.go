@@ -3,12 +3,12 @@ package models_test
 import (
 	"testing"
 
-	"github.com/jelmersnoeck/analysis/benchmark"
+	"github.com/jelmersnoeck/analysis/models"
 )
 
 func TestFromCorrectLine(t *testing.T) {
 	line := "BenchmarkTest1                20000000                89.4 ns/op"
-	b, _ := benchmark.FromLine(line)
+	b, _ := models.BenchmarkFromLine(line)
 
 	if b.Name != "BenchmarkTest1" {
 		t.Errorf("Name does not match BenchmarkTest1")
@@ -26,7 +26,7 @@ func TestFromCorrectLine(t *testing.T) {
 func TestFromInvalidLine(t *testing.T) {
 	line := "Benchmark Is Invalid"
 
-	b, _ := benchmark.FromLine(line)
+	b, _ := models.BenchmarkFromLine(line)
 
 	if b != nil {
 		t.Errorf("Benchmark should be nil")
@@ -35,7 +35,7 @@ func TestFromInvalidLine(t *testing.T) {
 
 func TestFromIncorrectLine(t *testing.T) {
 	line := "BenchmarkTest1                String                89.4 ns/op"
-	b, _ := benchmark.FromLine(line)
+	b, _ := models.BenchmarkFromLine(line)
 
 	if b != nil {
 		t.Errorf("Benchmark should be nil")
