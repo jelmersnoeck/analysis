@@ -1,10 +1,11 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
+	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
+	"github.com/jelmersnoeck/analysis/controllers"
 	"github.com/jelmersnoeck/analysis/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/joho/godotenv/autoload"
@@ -14,35 +15,16 @@ import (
 func main() {
 	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 
 	db.AutoMigrate(&models.Project{})
 	db.AutoMigrate(&models.Benchmark{})
 
-	file, err := os.Open("test-benchmark")
+	r := mux.NewRouter()
+	r.HandleFunc("/", controllers.IndexProjectsHandler).Methods("GET")
+	r.HandleFunc("/projects", controllers.CreateProjectsHandler).
+		Methods("POST").Headers("Content-Type", "application/json")
 
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	benchmarks := make([]*models.Benchmark, 0)
-
-	for scanner.Scan() {
-		b, err := models.BenchmarkFromLine(scanner.Text())
-
-		if err != nil {
-			fmt.Println(err)
-			break
-		}
-
-		if b != nil {
-			benchmarks = append(benchmarks, b)
-		}
-	}
-
-	fmt.Println(benchmarks)
+	http.ListenAndServe(":8000", r)
 }
