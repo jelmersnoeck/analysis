@@ -1,37 +1,39 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"net/http"
 
 	"golang.org/x/tools/benchmark/parse"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	file, err := os.Open("test-benchmark")
+	r := mux.NewRouter()
+
+	r.HandleFunc("/", CreateHandler).Methods("POST")
+
+	http.ListenAndServe(":5000", r)
+}
+
+func CreateHandler(w http.ResponseWriter, r *http.Request) {
+	f, _, err := r.FormFile("benchmark")
 
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
-	benchmarks := make([]*parse.Benchmark, 0)
+	set, err := parse.ParseSet(f)
 
-	for scanner.Scan() {
-		b, err := parse.ParseLine(scanner.Text())
-
-		if err != nil {
-			fmt.Println(err)
-			break
-		}
-
-		if b != nil {
-			benchmarks = append(benchmarks, b)
-		}
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
-	fmt.Println(benchmarks)
+	fmt.Println(set)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`OK`))
 }
